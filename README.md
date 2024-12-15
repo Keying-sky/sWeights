@@ -18,27 +18,11 @@ The main structure of the packages created for this project is like:
 └── usage_examples.ipynb   # the main file to answer the questions
 ```
 
-## Features
-- **Data Generation**: Generate mixed samples of signal and background events
-  - Crystal Ball distribution for signal in X
-  - Truncated exponential for signal in Y
-  - Uniform distribution for background in X
-  - Truncated normal for background in Y
-- **Fitting Methods**:
-  - Extended Maximum Likelihood fitting
-  - Parameter estimation with uncertainties
-  - Profile likelihood analysis
-- **Statistical Analysis**:
-  - Bootstrap analysis for parameter estimation
-  - sWeights method for background subtraction
-  - Uncertainty estimation
-  - Performance benchmarking
-
 ## Installation
 
 1. Clone the repository:
 ```bash
-git clone [repository-url]
+git clone https://gitlab.developers.cam.ac.uk/phy/data-intensive-science-mphil/assessments/s1_coursework/ks2146.git
 ```
 
 2. Install:
