@@ -1,0 +1,9 @@
+src/__pycache__/
+src/bootstrap/__pycache__/
+src/distribution/__pycache__/
+src/fitting/__pycache__/
+src/generation/__pycache__/
+src/sweight/__pycache__/
+
+*.egg-info
+
