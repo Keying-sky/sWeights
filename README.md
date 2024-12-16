@@ -3,6 +3,9 @@
 
 In this coursework, a comparison between the extended multi-dimensional likelihood fit and the weighted fit exploiting *sWeights* is made step by step.
 
+## Declaration
+No auto-generation tools were used in this coursework except for generation of BibTeX references.
+
 ## Project Structure
 The main structure of the packages created for this project is like:
 ```
@@ -28,6 +31,17 @@ git clone https://gitlab.developers.cam.ac.uk/phy/data-intensive-science-mphil/a
 2. Install:
 ```bash
 pip install -e .
+```
+
+
+3. Use:
+After installing, all the classes in package 's1_coursework' can be imported and used anywhere on your own machine.
+```bash
+from src.distribution import PDF
+from src.generation import Generator
+from src.fitting import Fitter
+from src.sweight import Sweightor
+from src.bootstrap import Bootstrap
 ```
 
 ## Usage

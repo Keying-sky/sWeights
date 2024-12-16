@@ -53,9 +53,8 @@ class Bootstrap:
                 fitter = Fitter(x, y)
                 fit_result = fitter.fit()
                 
-                if fit_result.success:
-                    lambda_fit.append(fit_result.parameters[5])  # Lambda parameter
-                    N.append(fit_result.parameters[-1])
+                lambda_fit.append(fit_result[0][5])  # Lambda parameter
+                N.append(fit_result[0][-1])
             
             lambda_fit = np.array(lambda_fit)
             N = np.array(N)
@@ -83,28 +82,44 @@ class Bootstrap:
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
         
         # plot standard deviation
-        ax1.errorbar(sizes, uncertainties, 
-                    yerr=uncertainties/np.sqrt(2*(self.n_ensemble-1)),
-                    fmt='o-', capsize=5)
+        ax1.errorbar(sizes, uncertainties, yerr=uncertainties/np.sqrt(2*(self.n_ensemble-1)), fmt='o-', capsize=5)       
         ax1.set_xscale('log')
         ax1.set_yscale('log')
         ax1.set_xlabel('Sample Size')
-        ax1.set_ylabel('Uncertainty in λ')
+        ax1.set_ylabel('SE on λ')
+        ax1.set_title('Uncertainty on λ as a function of the sample size')
         
-        # add 1/√N line for comparison
-        ref_point = uncertainties[0] * np.sqrt(sizes[0]/sizes)
-        ax1.plot(sizes, ref_point, 'r--', label='1/√N scaling')
+        # add data details
+        for i, (x, y) in enumerate(zip(sizes, uncertainties)):
+            if i == len(sizes)-1:
+                ax1.annotate(f'({x}, {y:.4f})', xy=(x, y), xytext=(-80, 5), textcoords='offset points', fontsize=8)
+            else:     
+                ax1.annotate(f'({x}, {y:.4f})', xy=(x, y), xytext=(5, 5), textcoords='offset points', fontsize=8)
+                        
+        # add theoritical line for comparison
+        ref_point = uncertainties[0] * np.sqrt(sizes[0]/sizes)   # SE(500)*sqrt(500) = SD(100000)
+        ax1.plot(sizes, ref_point, 'r--',  alpha=0.5, label=r'$\frac{SD}{\sqrt{ss}}$')
         ax1.legend()
-        
+
         # plot bias
-        ax2.errorbar(sizes, biases, 
-                    yerr=uncertainties/np.sqrt(self.n_ensemble),
-                    fmt='o-', capsize=5)
+        ax2.errorbar(sizes, biases, yerr=uncertainties/np.sqrt(self.n_ensemble), fmt='o-', capsize=5)         
         ax2.axhline(y=0, color='r', linestyle='--', alpha=0.5)
         ax2.set_xscale('log')
         ax2.set_xlabel('Sample Size')
-        ax2.set_ylabel('Bias in λ')
-        
+        ax2.set_ylabel('Bias on λ')
+        ax2.set_title('Bias on λ as a function of the sample size')
+
+        # add data details
+        for i, (x, y) in enumerate(zip(sizes, biases)):
+            if i == len(sizes)-1:
+                ax2.annotate(f'({x}, {y:.4f})', xy=(x, y), xytext=(-50, -30), textcoords='offset points', fontsize=8)
+            else:     
+                ax2.annotate(f'({x}, {y:.4f})', xy=(x, y), xytext=(5, 5), textcoords='offset points', fontsize=8)
+                        
+                        
+                        
+                        
+
         plt.tight_layout()
         return fig
 

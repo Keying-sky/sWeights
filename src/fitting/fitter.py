@@ -1,19 +1,8 @@
-from dataclasses import dataclass
 import numpy as np
 from scipy import stats
 from iminuit import Minuit
 from typing import Optional, Dict
 
-@dataclass
-class FitResult:
-    """ Store results from the fitting."""
-    parameters: np.ndarray
-    uncertainties: np.ndarray
-    correlations: np.ndarray
-    success: bool
-    fmin: Dict
-    params_dict: Dict
-    valid_errors: bool
 
 class Fitter:
     """ Extended Maximum Likelihood Fitter."""
@@ -96,7 +85,7 @@ class Fitter:
         Parameters:
             init_guess: optional dictionary of initial parameter values
         Returns:
-            FitResult object
+            estimated params, parabolic errors (uncertaintis, approximately equal to the standard deviation)
         """
         if init_guess is None:
             init_guess = {'mu':3.0,'sigma':0.3,'beta':1.0,'m':1.4,'f':0.6,'lamda':0.3,'mu_b':0.0,'sigma_b':2.5,'N':float(self.n_events)}
@@ -104,42 +93,12 @@ class Fitter:
         # create Minuit instance
         m = Minuit(self.neg_lnL, **init_guess)
 
-        # set parameter limits
-        m.limits['mu'] = (0, 5)
-        m.limits['sigma'] = (0.1, 1)
-        m.limits['beta'] = (0.5, 2)
-        m.limits['m'] = (1, 3)
-        m.limits['f'] = (0, 1)
-        m.limits['lamda'] = (0.1, 1)
-        m.limits['mu_b'] = (-2, 2)
-        m.limits['sigma_b'] = (0.1, 5)
-        m.limits['N'] = (0, None)
-        
-        # set error computation level
-        m.strategy = 2  # most accurate error estimation
-    
         m.migrad() 
         m.hesse() 
-        valid_errors = True
-        
-        try:
-            m.minos()  # Detailed error analysis
-        except Exception:
-            valid_errors = False
-        
-        # extract results
+
         params = np.array([m.values[p] for p in m.parameters])
         errors = np.array([m.errors[p] for p in m.parameters])
         
-        # get correlation matrix
-        correlations = np.array(m.covariance.correlation())
-        
-        return FitResult(
-            parameters=params,
-            uncertainties=errors,
-            correlations=correlations,
-            success=m.valid,
-            fmin=m.fmin,
-            params_dict=dict(zip(m.parameters, params)),
-            valid_errors=valid_errors)
+        return params, errors
+
         

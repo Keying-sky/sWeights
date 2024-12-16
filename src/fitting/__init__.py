@@ -1,3 +1,3 @@
-from .fitter import Fitter, FitResult
+from .fitter import Fitter
 
-__all__ = ["Fitter, FitResult"] 
+__all__ = ["Fitter"] 

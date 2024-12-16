@@ -9,7 +9,8 @@ class Generator:
         self.x_min, self.x_max = 0, 5
         self.y_min, self.y_max = 0, 10
     
-    def generate_sample(self, n_events: int) -> Tuple[np.ndarray, np.ndarray]:
+
+    def generate_sample(self, n_events: int):
         """ Generate n_events from the mixture model."""
         # determine number of signal and background events
         n_signal = np.random.binomial(n_events, self.params[4])  # parameter: f
@@ -21,12 +22,9 @@ class Generator:
         
         # generate background events
         x_background = np.random.uniform(self.x_min, self.x_max, n_background)
-        y_background = stats.truncnorm.rvs(
-            (self.y_min - self.params[6]) / self.params[7],   # mu_b, sigma_b
-            (self.y_max - self.params[6]) / self.params[7],
-            loc=self.params[6],
-            scale=self.params[7],
-            size=n_background)
+        y_background = stats.truncnorm.rvs( (self.y_min - self.params[6]) / self.params[7],   # mu_b, sigma_b
+                                           (self.y_max - self.params[6]) / self.params[7],
+                                           loc=self.params[6], scale=self.params[7], size=n_background)
         
         # combine s and b, then mess up
         x = np.concatenate([x_signal, x_background])
@@ -35,7 +33,7 @@ class Generator:
         
         return x[disorder_idx], y[disorder_idx]
     
-    def generate_gs(self, n: int) -> np.ndarray:
+    def generate_gs(self, n: int):
         """ Generate samples from Crystal Ball distribution."""
         samples = stats.crystalball.rvs(
             self.params[2],  # beta
@@ -57,7 +55,7 @@ class Generator:
             samples = np.concatenate([samples, extra[mask]])
         return samples[:n]
     
-    def generate_hs(self, n: int) -> np.ndarray:
+    def generate_hs(self, n: int):
         """ Generate samples from truncated exponential."""
         samples = np.random.exponential(1/self.params[5], n)  # lamda
         mask = (samples >= self.y_min) & (samples <= self.y_max)
