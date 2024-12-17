@@ -72,7 +72,7 @@ class Sweightor:
         m.migrad()
         m.hesse()     
         return m.values['lamda'], m.errors['lamda']
-    
+       
     def do_sWeight(self, true_lambda = 0.3):
         """
         Perform sWeights analysis.
@@ -80,7 +80,7 @@ class Sweightor:
         Parameters:
             true_lambda: true value of lambda for bias calculation    
         Returns:
-            SweightsResult containing fit results and analysis
+            SweightsResult containing the weights and fit results
         """
         # fit X distribution
         mi, spdf, bpdf = self.EMLx_fit()
