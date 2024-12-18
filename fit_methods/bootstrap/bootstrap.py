@@ -53,7 +53,7 @@ class Bootstrap:
                 fitter = Fitter(x, y)
                 fit_result = fitter.fit()
                 
-                lambda_fit.append(fit_result[0][5])  # Lambda parameter
+                lambda_fit.append(fit_result[0][5])
                 N.append(fit_result[0][-1])
             
             lambda_fit = np.array(lambda_fit)
@@ -116,10 +116,6 @@ class Bootstrap:
             else:     
                 ax2.annotate(f'({x}, {y:.4f})', xy=(x, y), xytext=(5, 5), textcoords='offset points', fontsize=8)
                         
-                        
-                        
-                        
-
         plt.tight_layout()
         return fig
 

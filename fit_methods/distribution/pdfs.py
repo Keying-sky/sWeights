@@ -23,14 +23,14 @@ class PDF:
         # mask for the interval limits
         mask = (x >= self.x_min) & (x <= self.x_max)
         
-        # initialise the pdf values
+        # initialise
         pdf = np.zeros_like(x, dtype=float)
         
         # normalisation constant
         N_inverse = (stats.crystalball.cdf(self.x_max, self.beta, self.m, loc=self.mu, scale=self.sigma) -
                      stats.crystalball.cdf(self.x_min, self.beta, self.m, loc=self.mu, scale=self.sigma))
 
-        # calculate pdf for values within the valid interval
+        # calculate pdf 
         valid_x = x[mask]
         
         pdf[mask] = stats.crystalball.pdf(valid_x, self.beta, self.m, loc=self.mu, scale=self.sigma) / N_inverse
@@ -39,11 +39,10 @@ class PDF:
     
     def h_s(self, y):
         """ Truncated exponential distribution for signal in Y."""
-
         mask = (y >= self.y_min) & (y <= self.y_max)
         pdf = np.zeros_like(y, dtype=float)
         
-        # (inverse) normalisation constant 
+        # normalisation constant 
         N_inverse = (1 - np.exp(-self.lamda * self.y_max))
         pdf[mask] = self.lamda * np.exp(-self.lamda * y[mask]) / N_inverse
         
@@ -51,7 +50,6 @@ class PDF:
     
     def g_b(self, x):
         """ Uniform distribution for background in X.""" 
-
         mask = (x >= self.x_min) & (x <= self.x_max)
         pdf = np.zeros_like(x, dtype=float)
         pdf[mask] = 1 / (self.x_max - self.x_min)
@@ -72,23 +70,17 @@ class PDF:
         return pdf
     
     def s_pdf(self, x, y):
-        """ Joint pdf for signal component: gs(X)hs(Y)."""
-        
         return self.g_s(x) * self.h_s(y)
     
     def b_pdf(self, x, y):
-        """ Joint PDF for background component: gb(X)hb(Y)."""
-        
         return self.g_b(x) * self.h_b(y)
     
     def mix_pdf(self, x, y):
-        """ Full mix model: f*s(X,Y) + (1-f)*b(X,Y)."""
-          
+        """ Full mix model: f*s(X,Y) + (1-f)*b(X,Y)."""    
         return (self.f * self.s_pdf(x, y) + (1 - self.f) * self.b_pdf(x, y))
     
     def verify(self):
         """ Verify all p.d.f.s are nomalised over the valid domains."""
-
         def integrate_1d(pdf_func, min, max):
             result, error = quad(lambda x: pdf_func(np.array([x]))[0], min, max)
             return result
@@ -100,41 +92,38 @@ class PDF:
                 lambda x: self.y_min, lambda x: self.y_max)
             return result
         
-        # veriy g_s(x)
+        # verify g_s(x)
         gs_integral = integrate_1d(self.g_s, 0, 5)
         print(f"g_s(x) pdf integral: {gs_integral:.4f}")
         
-        # veriy h_s(y)
+        # verify h_s(y)
         hs_integral = integrate_1d(self.h_s, 0, 10)
         print(f"h_s(y) pdf integral: {hs_integral:.4f}")
 
-        # veriy g_b(x)
+        # verify g_b(x)
         gb_integral = integrate_1d(self.g_b, 0, 5)
         print(f"g_b(x) pdf integral: {gb_integral:.4f}")
         
-        # veriy h_b(y)
+        # verify h_b(y)
         hb_integral = integrate_1d(self.h_b, 0, 10)
         print(f"h_b(y) pdf integral: {hb_integral:.4f}")
 
-        # veriy s(x, y)
+        # verify s(x, y)
         s_integral = integrate_2d(self.s_pdf)
         print(f"signal pdf integral: {s_integral:.4f}")
         
-        # veriy b(x, y)
+        # verify b(x, y)
         b_integral = integrate_2d(self.b_pdf)
         print(f"background integral: {b_integral:.4f}")
         
-        # veriy mixed f(x, y)
+        # verify mixed f(x, y)
         mix_integral = integrate_2d(self.mix_pdf)
         print(f"mixted pdf integral: {mix_integral:.4f}")
 
     def plot_x_pdf(self, ax):
         """ Plot the projection in X-axis."""
-
         x = np.linspace(self.x_min, self.x_max, 200)
-        # y_mid = (self.y_min + self.y_max) / 2
-        
-        # marginal distributions
+
         signal_x = self.f * self.g_s(x)
         background_x = (1 - self.f) * self.g_b(x)
         total_x = signal_x + background_x
@@ -151,11 +140,9 @@ class PDF:
 
     def plot_y_pdf(self, ax):
         """ Plot the projection in Y-axis."""
-
-        y = np.linspace(self.y_min, self.y_max, 200)
-        # x_mid = (self.x_min + self.x_max) / 2
         
-        # marginal distributions
+        y = np.linspace(self.y_min, self.y_max, 200)
+
         signal_y = self.f * self.h_s(y)
         background_y = (1 - self.f) * self.h_b(y)
         total_y = signal_y + background_y
