@@ -1,13 +1,13 @@
 # S1 Coursework
-### Keying Song
+### Keying Song (ks2146)
 
-In this coursework, a package named *fit_methods* was created for the the comparison between the extended multi-dimensional likelihood fit and the weighted fit exploiting *sWeights*.
+In this coursework, a package named `fit_methods` was created for the the comparison between the extended multi-dimensional likelihood fit and the weighted fit exploiting *sWeights*.
 
 ## Declaration
 No auto-generation tools were used in this coursework except for generation of BibTeX references.
 
 ## Project Structure
-The main structure of *fit_methods* is like:
+The main structure of `fit_methods` is like:
 ```
 .
 ├── fit_methods/
@@ -34,7 +34,7 @@ pip install -e .
 ```
 
 3. Use:
-After installing, all the classes in package 's1_coursework' can be imported and used anywhere on your own machine.
+After installing, all the classes in package `fit_methods` can be imported and used anywhere on your own machine.
 ```python
 from fit_methods import PDF, Generator, Fitter, Bootstrap, Sweightor
 ```
