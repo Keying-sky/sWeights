@@ -7,3 +7,6 @@ src/sweight/__pycache__/
 
 fit_methods/*.egg-info
 
+*.pdf
+report/
+
